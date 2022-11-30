@@ -36,7 +36,24 @@ defmodule GamerBlog.Profiles do
       ** (Ecto.NoResultsError)
 
   """
-  def get_profile!(id), do: Repo.get!(Profile, id)
+  def get_profile!(id) do
+    Profile
+    |> Repo.get_by!(user_id: id)
+  end
+  @doc """
+  Returns the profile from user.
+  """
+  def select_profile_id(user_id) do
+    Profile
+    |> where([p], p.user_id == ^user_id)
+    |> select([p], p.id)
+    |> Repo.one()
+  end
+
+  def show_profile!(username) do
+    Profile
+    |> Repo.get_by!(username: username)
+  end
 
   @doc """
   Creates a profile.

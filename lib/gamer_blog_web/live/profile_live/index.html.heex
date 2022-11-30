@@ -58,48 +58,7 @@
     </div>
   </div>
   <div class="col-md-8 col-lg-6 vstack gap-4">
-    <%= if @following_peoples_posts do %>
-      <div id="posts" phx-update="append">
-        <%= for post <- @following_peoples_posts do %>
-            <div class="card rounded-3 mb-4" id="post.slug">
-              <div class="card-header border-0 pb-0">
-                <div class="d-flex align-items-center justify-content-between">
-                  <div class="d-flex align-items-center">
-                    <span><%= img_tag post.user.profile.avatar, alt: "avatar", class: " avatar avatar-raised me-2" %></span>
-                    <div>
-                      <div class="nav nav-divider">
-                        <h6 class="nav-item card-title mb-0">
-                          <%= post.user.profile.username %>
-                        </h6>
-                        <span class="nav-item small text-muted ms-2">
-                          <%= Timex.from_now post.updated_at %>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="card-body">
-                <h6 class="font-bold"><%= post.title %></h6>
-                <p><%= String.slice(post.content, 0, 100) %>...</p>
-                <img class="card-img">
-                <ul class="nav nav-stack py-3 small">
-                  <li class="nav-item">
-                    <a class="nav-link active" href="#"><i class="bi bi-heart-fill pe-1"></i>
-                      Liked <%= post.total_likes %>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="bi bi-chat-fill pe-1"></i>
-                      Comments <%= post.total_comments %>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-        <% end %>
-      </div>
-    <% end %>
+    <p>Cards Here</p>
   </div>
 
 

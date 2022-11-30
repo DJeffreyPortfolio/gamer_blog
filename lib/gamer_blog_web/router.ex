@@ -80,11 +80,14 @@ defmodule GamerBlogWeb.Router do
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
 
     live "/mydashboard", ProfileLive.Index, :index
-    live "/profiles/new", ProfileLive.New, :index
-    live "/profiles/:id/edit", ProfileLive.Index, :edit
+    live "/mydashboard/edit", ProfileLive.Index, :edit
+    live "/mydashboard/communities", ProfileLive.Community, :index
+    live "/mydashboard/groups", ProfileLive.Group, :index
 
-    live "/profiles/:id", ProfileLive.Show, :show
-    live "/profiles/:id/show/edit", ProfileLive.Show, :edit
+    live "/profiles/new", ProfileLive.New, :index
+
+    live "/user/:username", ProfileLive.Show, :show
+    live "/user/:username/show/edit", ProfileLive.Show, :edit
   end
 
   scope "/", GamerBlogWeb do

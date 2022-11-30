@@ -19,7 +19,7 @@ defmodule GamerBlog.Profiles.Profile do
   @doc false
   def changeset(profile, attrs) do
     profile
-    |> cast(attrs, [:avatar, :about, :username])
+    |> cast(attrs, [:about, :username])
     |> validate_required([:about, :username])
     |> validate_username()
     |> unique_constraint(:user_id)
