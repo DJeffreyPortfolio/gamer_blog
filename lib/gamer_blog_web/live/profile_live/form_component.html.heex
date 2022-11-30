@@ -1,0 +1,40 @@
+<div>
+  <h2><%= @title %></h2>
+
+  <.form
+    let={f}
+    for={@changeset}
+    id="profile-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save">
+  
+    <%= label f, :avatar %>
+    <%= text_input f, :avatar %>
+    <%= error_tag f, :avatar %>
+  
+    <%= label f, :about %>
+    <%= textarea f, :about %>
+    <%= error_tag f, :about %>
+  
+    <%= label f, :username %>
+    <%= text_input f, :username %>
+    <%= error_tag f, :username %>
+  
+    <%= label f, :follower_count %>
+    <%= number_input f, :follower_count %>
+    <%= error_tag f, :follower_count %>
+  
+    <%= label f, :following_count %>
+    <%= number_input f, :following_count %>
+    <%= error_tag f, :following_count %>
+  
+    <%= label f, :post_count %>
+    <%= number_input f, :post_count %>
+    <%= error_tag f, :post_count %>
+  
+    <div>
+      <%= submit "Save", phx_disable_with: "Saving..." %>
+    </div>
+  </.form>
+</div>

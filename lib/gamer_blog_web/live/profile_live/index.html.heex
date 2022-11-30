@@ -1,0 +1,126 @@
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.profile_index_path(@socket, :index)}>
+    <.live_component
+      module={GamerBlogWeb.ProfileLive.FormComponent}
+      id={@profile.id || :new}
+      title={@page_title}
+      action={@live_action}
+      profile={@profile}
+      return_to={Routes.profile_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<div class="row g-2 py-5 my-3">
+  <div class="col-lg-3">
+    <div class="card mb-6">
+      <div class="card-header text-center">
+        <p><%= img_tag @profile.avatar, alt: "avatar", class: " avatar-xxl avatar-raised" %></p>
+        <h5 class="text-muted"><%= @profile.username %></h5>
+      </div>
+      <div class="card-body">
+        <div class="hstack gap-2 gap-xl-3 justify-content-center text-center">
+          <div>
+            <h6 class="mb-0"><%= @profile.post_count %></h6>
+            <small>Posts</small>
+          </div>
+          <div class="vr"></div>
+          <div>
+            <h6 class="mb-0 font-bold"><%= @profile.follower_count %></h6>
+            <small>Followers</small>
+          </div>
+          <div class="vr"></div>
+          <div>
+            <h6 class="mb-0"><%= @profile.following_count %></h6>
+            <small>Following</small>
+          </div>
+        </div>
+        <hr />
+          <ul class="nav nav-link-secondary flex-column fs-5 gap-2">
+            <li class="nav-item">
+              <i class="bi bi-people me-2"></i>
+              <span>Communities</span>
+            </li>
+            <li class="nav-item">
+              <i class="bi bi-chat-quote me-2"></i>
+              <span>Groups</span>
+            </li>
+            <li class="nav-item">
+              <i class="bi bi-chat-right-text me-2"></i>
+              <span>Messages</span>
+            </li>
+          </ul>
+        <hr />
+        <div class="text-center">
+          <%= live_patch "View Profile", to: Routes.profile_show_path(@socket, :show, @profile.username), class: "c-words" %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8 col-lg-6 vstack gap-4">
+    <%= if @following_peoples_posts do %>
+      <div id="posts" phx-update="append">
+        <%= for post <- @following_peoples_posts do %>
+            <div class="card rounded-3 mb-4" id="post.slug">
+              <div class="card-header border-0 pb-0">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div class="d-flex align-items-center">
+                    <span><%= img_tag post.user.profile.avatar, alt: "avatar", class: " avatar avatar-raised me-2" %></span>
+                    <div>
+                      <div class="nav nav-divider">
+                        <h6 class="nav-item card-title mb-0">
+                          <%= post.user.profile.username %>
+                        </h6>
+                        <span class="nav-item small text-muted ms-2">
+                          <%= Timex.from_now post.updated_at %>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <h6 class="font-bold"><%= post.title %></h6>
+                <p><%= String.slice(post.content, 0, 100) %>...</p>
+                <img class="card-img">
+                <ul class="nav nav-stack py-3 small">
+                  <li class="nav-item">
+                    <a class="nav-link active" href="#"><i class="bi bi-heart-fill pe-1"></i>
+                      Liked <%= post.total_likes %>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="bi bi-chat-fill pe-1"></i>
+                      Comments <%= post.total_comments %>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+
+  <div class="col-lg-3">
+    <div class="card bg-white mb-4 pb-4">
+      <div class="card-header">
+        <%= @profile.username %>
+      </div>
+      <div class="card-body">
+        <div class="btn-group">
+            <button class="btn btn-primary">Create Post</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card bg-white mb-4 pb-4">
+      <div class="card-header">
+        Affiliated and Social Media Links
+      </div>
+      <div class="card-body">
+      </div>
+    </div>
+  </div>
+</div>

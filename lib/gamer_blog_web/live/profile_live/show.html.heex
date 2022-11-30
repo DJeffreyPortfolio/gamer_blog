@@ -1,0 +1,51 @@
+<h1>Show Profile</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.profile_show_path(@socket, :show, @profile)}>
+    <.live_component
+      module={GamerBlogWeb.ProfileLive.FormComponent}
+      id={@profile.id}
+      title={@page_title}
+      action={@live_action}
+      profile={@profile}
+      return_to={Routes.profile_show_path(@socket, :show, @profile)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Avatar:</strong>
+    <%= @profile.avatar %>
+  </li>
+
+  <li>
+    <strong>About:</strong>
+    <%= @profile.about %>
+  </li>
+
+  <li>
+    <strong>Username:</strong>
+    <%= @profile.username %>
+  </li>
+
+  <li>
+    <strong>Follower count:</strong>
+    <%= @profile.follower_count %>
+  </li>
+
+  <li>
+    <strong>Following count:</strong>
+    <%= @profile.following_count %>
+  </li>
+
+  <li>
+    <strong>Post count:</strong>
+    <%= @profile.post_count %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.profile_show_path(@socket, :edit, @profile), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.profile_index_path(@socket, :index) %></span>

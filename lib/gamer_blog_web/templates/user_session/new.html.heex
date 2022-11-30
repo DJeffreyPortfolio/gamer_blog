@@ -1,0 +1,46 @@
+<div class="px-2 py-5 my-3 text-center">
+  <h2 class="display-6 fw-bold">Welcome Back</h2>
+</div>
+<div class="row align-items-center justify-items-center">
+  <div class="col-md-4 offset-md-4">
+    <div class="card bg-white rounded shadow">
+      <div class="card-body">
+        <h4 class="text-center">Login</h4>
+
+        <.form let={f} for={@conn} action={Routes.user_session_path(@conn, :create)} as={:user}>
+          <%= if @error_message do %>
+            <div class="alert alert-danger">
+              <p><%= @error_message %></p>
+            </div>
+          <% end %>
+
+          <div class="mb-3">
+            <%= label f, :email, class: "form-label" %>
+            <%= email_input f, :email, required: true, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= label f, :password, class: "form-label" %>
+            <%= password_input f, :password, required: true, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <div class="form-check">
+              <%= checkbox f, :remember_me, class: "form-check-input" %>
+              <%= label f, :remember_me, "Keep me logged in", class: "form-check-label" %>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <%= submit "Log in", class: "btn btn-primary" %>
+          </div>
+        </.form>
+
+        <p>
+          <%= link "Register", to: Routes.user_registration_path(@conn, :new) %> |
+          <%= link "Forgot your password?", to: Routes.user_reset_password_path(@conn, :new) %>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
