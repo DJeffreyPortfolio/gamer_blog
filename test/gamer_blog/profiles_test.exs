@@ -66,4 +66,56 @@ defmodule GamerBlog.ProfilesTest do
       assert %Ecto.Changeset{} = Profiles.change_profile(profile)
     end
   end
+
+  describe "likes" do
+    alias GamerBlog.Profiles.Like
+
+    import GamerBlog.ProfilesFixtures
+
+    @invalid_attrs %{}
+
+    test "list_likes/0 returns all likes" do
+      like = like_fixture()
+      assert Profiles.list_likes() == [like]
+    end
+
+    test "get_like!/1 returns the like with given id" do
+      like = like_fixture()
+      assert Profiles.get_like!(like.id) == like
+    end
+
+    test "create_like/1 with valid data creates a like" do
+      valid_attrs = %{}
+
+      assert {:ok, %Like{} = like} = Profiles.create_like(valid_attrs)
+    end
+
+    test "create_like/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Profiles.create_like(@invalid_attrs)
+    end
+
+    test "update_like/2 with valid data updates the like" do
+      like = like_fixture()
+      update_attrs = %{}
+
+      assert {:ok, %Like{} = like} = Profiles.update_like(like, update_attrs)
+    end
+
+    test "update_like/2 with invalid data returns error changeset" do
+      like = like_fixture()
+      assert {:error, %Ecto.Changeset{}} = Profiles.update_like(like, @invalid_attrs)
+      assert like == Profiles.get_like!(like.id)
+    end
+
+    test "delete_like/1 deletes the like" do
+      like = like_fixture()
+      assert {:ok, %Like{}} = Profiles.delete_like(like)
+      assert_raise Ecto.NoResultsError, fn -> Profiles.get_like!(like.id) end
+    end
+
+    test "change_like/1 returns a like changeset" do
+      like = like_fixture()
+      assert %Ecto.Changeset{} = Profiles.change_like(like)
+    end
+  end
 end

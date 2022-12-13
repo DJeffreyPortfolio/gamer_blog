@@ -1,0 +1,61 @@
+<div class="container">
+  <div class="row justify-content-between">
+    <div class="col-6 py-4">
+      <div class="card bg-white rounded shadow">
+        <div class="card-body">
+          <h5 class="card-title">Create Post</h5>
+          <.form
+            let={f}
+            for={@changeset}
+            id="post-form"
+            phx-change="validate"
+            phx-submit="save">
+
+            <div class="mb-3">
+                <%= label f, :title, class: "form-label" %>
+                <%= text_input f, :title, class: "form-control" %>
+                <%= error_tag f, :title %>
+            </div>
+
+            <div class="mb-3">
+              <%= label f, :content, class: "form-label" %>
+              <%= textarea f, :content, class: "form-control", rows: 5 %>
+              <%= error_tag f, :content %>
+            </div>
+
+            <div class="mb-3">
+                <%= label f, :community_id, class: "form-label" %>
+                <%= select f, :community_id,
+                  [
+                    "Apex Legends": 1,
+                    "Civilization 6": 2,
+                    "Destiny 2": 3,
+                    "Fortnite": 4,
+                    "Warhammer 40k": 5
+                  ], class: "form-select" %>
+                <%= error_tag f, :community_id %>
+            </div>
+
+            <div>
+              <%= submit "Save", phx_disable_with: "Saving...", class: "btn btn-primary" %>
+            </div>
+          </.form>
+        </div>
+      </div>
+    </div>
+    <div class="col-3 py-4">
+      <div class="card bg-white rounded shadow">
+        <div class="card-body">
+          <h3>Creating Posts</h3>
+          <ol>
+            <li>Remember to be human</li>
+            <li>Behave like you would in real life</li>
+            <li>Look for the original source of content</li>
+            <li>Search for duplicates before posting</li>
+            <li>Post in correct community</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

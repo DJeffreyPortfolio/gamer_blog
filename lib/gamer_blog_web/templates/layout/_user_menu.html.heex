@@ -1,5 +1,4 @@
 <%= if @current_user do %>
-  <%= @current_user.email %>
   <%= link "Settings", to: Routes.user_settings_path(@conn, :edit), class: "btn btn-primary" %>
   <%= link "Log out", to: Routes.user_session_path(@conn, :delete), method: :delete, class: "btn btn-danger" %>
 <% else %>

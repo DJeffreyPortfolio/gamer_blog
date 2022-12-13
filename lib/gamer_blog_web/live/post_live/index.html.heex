@@ -1,0 +1,77 @@
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.post_index_path(@socket, :index, @post.community_id)}>
+    <.live_component
+      module={GamerBlogWeb.PostLive.FormComponent}
+      id={@post.id}
+      title={@page_title}
+      action={@live_action}
+      post={@post}
+      return_to={Routes.post_index_path(@socket, :index, @post.community_id)}
+    />
+  </.modal>
+<% end %>
+
+<div class="p-4 p-md-5 mb-4 rounded bg-white">
+    <div class="px-0">
+      <h1 class="font-bold text-center"><i>Welcome to the <%= @title %> Community</i></h1>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row g-5">
+    <div class="col-md-8" id="posts">
+
+    <%= for post <- @posts do %>
+      <div class="card rounded-3 mb-4" id="post.slug">
+        <div class="card-header border-0 pb-0">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+              <span><%= img_tag post.user.profile.avatar, alt: "avatar", class: " avatar avatar-raised me-2" %></span>
+              <div>
+                <div class="nav nav-divider">
+                  <h6 class="nav-item small text-muted card-title mb-0">
+                  <%= live_redirect to: Routes.profile_show_path(@socket, :show, post.user.profile.username), class: "clear-words" do %>
+                    <%= post.user.profile.username %>
+                  <% end %>
+                  </h6>
+                  <span class="nav-item small text-muted ms-2">
+                    <%= Timex.from_now post.updated_at %>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <%= live_redirect id: post.slug, to: Routes.post_show_path(@socket, :show, post.community_id, post.id, post.slug), class: "clear-words" do %>
+          <h4 class="font-bold"><%= post.title %></h4>
+          <% end %>
+          <p><%= String.slice(post.content, 0, 100) %>...</p>
+          <img class="card-img">
+          <ul class="nav nav-stack py-3 small">
+            <li class="nav-item">
+              <span class="nav-link"><i class="bi bi-heart-fill pe-1"></i>
+                <%= post.total_likes %> Likes
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    <% end %>
+
+      <nav class="blog-pagination" aria-label="Pagination">
+        <a class="btn btn-outline-primary" href="#">Older</a>
+        <a class="btn btn-outline-secondary disabled" href="#" tabindex="-1" aria-disabled="true">Newer</a>
+      </nav>
+
+    </div>
+
+    <div class="col-md-4">
+      <div class="position-sticky" style="top: 2rem;">
+        <div class="p-4 mb-3 bg-white rounded">
+          <%= live_patch "Create Post", to: Routes.post_new_path(@socket, :index), class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  </div>

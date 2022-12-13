@@ -58,7 +58,47 @@
     </div>
   </div>
   <div class="col-md-8 col-lg-6 vstack gap-4">
-    <p>Cards Here</p>
+    <%= if @following_peoples_posts do %>
+      <div id="posts" phx-update="append">
+        <%= for post <- @following_peoples_posts do %>
+            <div class="card rounded-3 mb-4" id="post.slug">
+              <div class="card-header border-0 pb-0">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div class="d-flex align-items-center">
+                    <span><%= img_tag post.user.profile.avatar, alt: "avatar", class: " avatar avatar-raised me-2" %></span>
+                    <div>
+                      <div class="nav nav-divider">
+                        <h6 class="nav-item card-title mb-0">
+                        <%= live_redirect to: Routes.profile_show_path(@socket, :show, post.user.profile.username), class: "clear-words" do %>
+                          <%= post.user.profile.username %>
+                        <% end %>
+                        </h6>
+                        <span class="nav-item small text-muted ms-2">
+                          <%= Timex.from_now post.updated_at %>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <%= live_redirect id: post.slug, to: Routes.post_show_path(@socket, :show, post.community_id, post.id, post.slug), class: "clear-words" do %>
+                <h6 class="font-bold"><%= post.title %></h6>
+                <% end %>
+                <p><%= String.slice(post.content, 0, 100) %>...</p>
+                <img class="card-img">
+                <ul class="nav nav-stack py-3 small">
+                  <li class="nav-item">
+                    <a class="nav-link active" href="#"><i class="bi bi-heart-fill pe-1"></i>
+                      Liked <%= post.total_likes %>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+        <% end %>
+      </div>
+    <% end %>
   </div>
 
 
@@ -69,16 +109,10 @@
       </div>
       <div class="card-body">
         <div class="btn-group">
+          <%= live_patch to: Routes.post_new_path(@socket, :index) do %>
             <button class="btn btn-primary">Create Post</button>
+          <% end %>
         </div>
-      </div>
-    </div>
-
-    <div class="card bg-white mb-4 pb-4">
-      <div class="card-header">
-        Affiliated and Social Media Links
-      </div>
-      <div class="card-body">
       </div>
     </div>
   </div>

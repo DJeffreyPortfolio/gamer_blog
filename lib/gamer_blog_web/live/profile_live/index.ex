@@ -3,7 +3,7 @@ defmodule GamerBlogWeb.ProfileLive.Index do
 
   alias GamerBlog.Accounts
   alias GamerBlog.Profiles
-  alias GamerBlog.Profiles.Profile
+  alias GamerBlog.CMS
 
   @impl true
   def mount(_params, %{"user_token" => token } = _session, socket) do
@@ -27,7 +27,7 @@ defmodule GamerBlogWeb.ProfileLive.Index do
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:profile, Profiles.get_profile!(socket.assigns.current_user.id))
-    #|> assign(:following_peoples_posts, show_dashboard_listings(socket.assigns.current_user, socket.assigns.page, socket.assigns.per_page))
+    |> assign(:following_peoples_posts, show_dashboard_listings(socket.assigns.current_user, socket.assigns.page, socket.assigns.per_page))
   end
 
   # Need to log out after deleting profile, maybe delete total account?
@@ -39,9 +39,9 @@ defmodule GamerBlogWeb.ProfileLive.Index do
   #  {:noreply, assign(socket, :profiles, list_profiles())}
   #end
 
-  #defp show_dashboard_listings(user, page, per_page) do
-   # CMS.dashboard_feed(user, page, per_page)
-  #end
+  defp show_dashboard_listings(user, page, per_page) do
+    CMS.dashboard_feed(user, page, per_page)
+  end
 
   defp assign_user(socket, token) do
     assign_new(socket, :current_user, fn ->

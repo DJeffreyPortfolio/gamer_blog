@@ -2,7 +2,11 @@ defmodule GamerBlog.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias GamerBlog.CMS.Post
+  alias GamerBlog.Likes.Like
+  alias GamerBlog.Profiles.Follows
   alias GamerBlog.Profiles.Profile
+
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -12,6 +16,10 @@ defmodule GamerBlog.Accounts.User do
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
     has_one :profile, Profile
+    has_many :posts, Post
+    has_many :likes, Like
+    has_many :following, Follows, foreign_key: :follower_id
+    has_many :follower, Follows, foreign_key: :following_id
 
     timestamps()
   end

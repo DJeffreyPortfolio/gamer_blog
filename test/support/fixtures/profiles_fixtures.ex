@@ -22,4 +22,18 @@ defmodule GamerBlog.ProfilesFixtures do
 
     profile
   end
+
+  @doc """
+  Generate a like.
+  """
+  def like_fixture(attrs \\ %{}) do
+    {:ok, like} =
+      attrs
+      |> Enum.into(%{
+
+      })
+      |> GamerBlog.Profiles.create_like()
+
+    like
+  end
 end

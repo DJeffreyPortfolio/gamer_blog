@@ -1,15 +1,28 @@
-<h1>Forgot your password?</h1>
+<div class="px-4 py-5 my-3 text-center">
+  <h2 class="display-6 fw-bold">Welcome to Gamer Blog!</h2>
+</div>
+<div class="row align-items-center justify-items-center">
+  <div class="col-md-4 offset-md-4">
+    <div class="card bg-white rounded shadow">
+      <div class="card-body">
+        <h4 class="text-center">Forgot your password?</h4>
+        <.form let={f} for={:user} action={Routes.user_reset_password_path(@conn, :create)}>
 
-<.form let={f} for={:user} action={Routes.user_reset_password_path(@conn, :create)}>
-  <%= label f, :email %>
-  <%= email_input f, :email, required: true %>
+          <div class="mb-3">
+            <%= label f, :email, class: "form-label" %>
+            <%= email_input f, :email, required: true, class: "form-control" %>
+          </div>
 
-  <div>
-    <%= submit "Send instructions to reset password" %>
+          <div class="mb-3">
+            <%= submit "Send instructions to reset password", class: "btn btn-primary" %>
+          </div>
+        </.form>
+
+        <p>
+          <%= link "Log in", to: Routes.user_session_path(@conn, :new) %> |
+          <%= link "Register", to: Routes.user_registration_path(@conn, :new) %>
+        </p>
+      </div>
+    </div>
   </div>
-</.form>
-
-<p>
-  <%= link "Register", to: Routes.user_registration_path(@conn, :new) %> |
-  <%= link "Log in", to: Routes.user_session_path(@conn, :new) %>
-</p>
+</div>

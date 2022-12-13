@@ -1,0 +1,43 @@
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.post_show_path(@socket, :show, @post.community_id, @post.id, @post.slug)}>
+    <.live_component
+      module={GamerBlogWeb.PostLive.FormComponent}
+      id={@post.id}
+      action={@live_action}
+      post={@post}
+      return_to={Routes.post_show_path(@socket, :show, @post.community_id, @post.id, @post.slug)}
+    />
+  </.modal>
+<% end %>
+
+<div class="row">
+  <div class="col-sm-6 col-lg-3">
+    <div class="card rounded">
+      <div class="card-body">
+        <div class="text-center">
+          <p><%= img_tag @post.user.profile.avatar, class: "avatar avatar-xxl shadow-xl" %></p>
+          <%= live_redirect to: Routes.profile_show_path(@socket, :show, @post.user.profile.username), class: "clear-words" do %>
+            <%= @post.user.profile.username %>
+          <% end %>
+        </div>
+        <hr>
+        <div class="text-center">
+          <%= @post.total_likes %> likes
+          <%= if @current_user.id != @post.user.id do %>
+            <.live_component module={GamerBlogWeb.LikeComponent} id={@post.user.id} liked={@post} current_user={@current_user} />
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-lg-9">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title text-center mt-6 pt-5"><%= @post.title %></h2>
+        <h6 class="card-subtitle mb-2 text-muted">By: <%= @post.user.profile.username %></h6>
+        <p class="mb-4"><%= @post.content %></p>
+      </div>
+    </div>
+  </div>
+</div>
