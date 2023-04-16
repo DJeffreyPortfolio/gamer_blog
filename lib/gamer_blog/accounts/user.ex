@@ -1,6 +1,9 @@
 defmodule GamerBlog.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+
+  alias GamerBlog.Profiles.Profile
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "users" do
@@ -8,6 +11,7 @@ defmodule GamerBlog.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
+    has_one :profile, Profile
 
     timestamps()
   end

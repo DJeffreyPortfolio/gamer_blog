@@ -68,6 +68,14 @@ defmodule GamerBlogWeb.Router do
       on_mount: [{GamerBlogWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+
+      live "/mydashboard", ProfileLive.Index, :index
+      live "/mydashboard/edit", ProfileLive.Index, :edit
+
+      live "/profiles/new", ProfileLive.New, :index
+
+      live "/user/:username", ProfileLive.Show, :show
+      live "/user/:username/show/edit", ProfileLive.Show, :edit
     end
   end
 
