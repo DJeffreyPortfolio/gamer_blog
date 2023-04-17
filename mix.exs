@@ -51,7 +51,9 @@ defmodule GamerBlog.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:bootstrap_icons, "~> 0.4.0"}
+      {:bootstrap_icons, "~> 0.4.0"},
+      {:slugify, "~> 1.3"},
+      {:timex, "~> 3.7"}
     ]
   end
 

@@ -4,6 +4,7 @@ defmodule GamerBlogWeb.ProfileLive.New do
   alias GamerBlog.Profiles
   alias GamerBlog.Profiles.Profile
 
+  @impl true
   def mount(_params, _session, socket) do
     changeset = Profiles.change_profile(%Profile{})
     {:ok,
@@ -13,6 +14,7 @@ defmodule GamerBlogWeb.ProfileLive.New do
     }
   end
 
+  @impl true
   def render(assigns) do
     ~H"""
     <div class="row align-items-center justify-items-center px-4 py-5 my-3">

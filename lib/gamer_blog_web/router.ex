@@ -76,6 +76,13 @@ defmodule GamerBlogWeb.Router do
 
       live "/user/:username", ProfileLive.Show, :show
       live "/user/:username/show/edit", ProfileLive.Show, :edit
+
+      live "/c/:community_id/posts", PostLive.Index, :index
+      live "/c/:community_id/posts/new", PostLive.Index, :new
+      live "/c/:community_id/posts/:id/:slug/edit", PostLive.Index, :edit
+
+      live "/c/:community_id/posts/:id/:slug", PostLive.Show, :show
+      live "/c/:community_id/posts/:id/:slug/show/edit", PostLive.Show, :edit
     end
   end
 

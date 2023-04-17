@@ -1,0 +1,52 @@
+<div class="mt-2 mb-2">
+  <.back navigate={~p"/c/#{@post.community_id}/posts"}>Back to posts</.back>
+</div>
+<div class="row">
+  <div class="col-sm-6 col-lg-3">
+    <div class="card rounded">
+      <div class="card-body">
+        <div class="text-center">
+          <p><img src={@post.user.profile.avatar} class="avatar avatar-xxl rounded-circle bg-primary border" /></p>
+          <.link navigate={~p"/user/#{@post.user.profile.username}"}>
+            <%= @post.user.profile.username %>
+          </.link>
+        </div>
+        <hr>
+        <div class="text-center">
+          Likes: <%= @post.total_likes %>
+          <%= if @current_user.id != @post.user.id do %>
+            like component
+          <% end %>
+        </div>
+        <%= if @current_user.id == @post.user_id do %>
+        <hr />
+        <div class="text-center">
+          <.link patch={~p"/c/#{@post.community_id}/posts/#{@post.id}/#{@post.slug}/show/edit"} phx-click={JS.push_focus()}>
+            <.button class="btn-secondary">Edit post <%= Bootstrap.Icons.pencil() %></.button>
+          </.link>
+        </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-lg-9">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title text-center mt-6 pt-5"><%= @post.title %></h2>
+        <h6 class="card-subtitle mb-2 text-muted">By: <%= @post.user.profile.username %></h6>
+        <p class="mb-4"><%= @post.content %></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<.modal :if={@live_action == :edit} id="post-modal" show on_cancel={JS.patch(~p"/c/#{@post.community_id}/posts/#{@post.id}/#{@post.slug}")}>
+  <.live_component
+    module={GamerBlogWeb.PostLive.FormComponent}
+    id={@post.id}
+    title="Edit Post"
+    action={@live_action}
+    post={@post}
+  />
+</.modal>
