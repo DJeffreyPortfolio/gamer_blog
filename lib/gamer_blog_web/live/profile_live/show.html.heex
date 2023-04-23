@@ -1,10 +1,17 @@
+<.back navigate={~p"/mydashboard"}>
+  <%= Bootstrap.Icons.arrow_left() %> Back to your dashboard
+</.back>
 <div class="row g-4 py-5 my-3">
   <div class="col-lg-8 vstack gap-4">
     <div class="card">
       <div class="card-body py-0">
         <div class="d-sm-flex align-items-start text-center text-sm-start">
           <div>
-            <img src={@profile.avatar}, class=" avatar-xxl avatar-raised rounded-circle bg-white border border-black border-3" />
+            <img
+              src={@profile.avatar}
+              ,
+              class=" avatar-xxl avatar-raised rounded-circle bg-white border border-black border-3"
+            />
           </div>
           <div class="ms-sm-4 mt-sm-3">
             <h5 class="mb-0">
@@ -13,45 +20,68 @@
           </div>
           <div class="d-flex mt-3 justify-content-center ms-sm-auto">
             <%= if @current_user.id !== @profile.user_id do %>
-              follow component
+              <.live_component
+                module={GamerBlogWeb.ProfileLive.FollowComponent}
+                id={@profile.user_id}
+                profile_user={@profile}
+                current_user={@current_user}
+              />
             <% end %>
-            <.back navigate={~p"/mydashboard"}>Back to your dashboard</.back>
           </div>
         </div>
         <ul class="list-inline mb-0 text-center text-sm-start mt-sm-0 mt-lg-4">
           <li class="list-inline-item">Posts: <%= @profile.post_count %></li>
-          <li class="list-inline-item">Followers: <%= @profile.post_count %></li>
-          <li class="list-inline-item">Following: <%= @profile.post_count %></li>
+          <li class="list-inline-item">Followers: <%= @profile.follower_count %></li>
+          <li class="list-inline-item">Following: <%= @profile.following_count %></li>
         </ul>
       </div>
       <div class="card-footer mt-3 pt-2 pb-0">
-        <ul class="nav nav-bottom-line align-items-center justify-content-center justify-content-md-start mb-0 border-0" id="profileTab" role="tablist">
+        <ul
+          class="nav nav-bottom-line align-items-center justify-content-center justify-content-md-start mb-0 border-0"
+          id="profileTab"
+          role="tablist"
+        >
           <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="post-tab" data-bs-toggle="tab" data-bs-target="#post"
-              type="button" role="tab" aria-controls="post" aria-selected="true">
+            <a
+              class="nav-link active"
+              id="post-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#post"
+              type="button"
+              role="tab"
+              aria-controls="post"
+              aria-selected="true"
+            >
               Posts
             </a>
           </li>
           <li class="nav-item" role="presentation">
-            <a class="nav-link" id="media-tab" data-bs-toggle="tab" data-bs-target="#media"
-              type="button" role="tab" aria-controls="media" aria-selected="false">
+            <a
+              class="nav-link"
+              id="media-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#media"
+              type="button"
+              role="tab"
+              aria-controls="media"
+              aria-selected="false"
+            >
               Media
             </a>
           </li>
         </ul>
-
-        </div>
+      </div>
     </div>
 
-      <div class="tab-content" id="profileTabContent">
-        <div class="tab-pane fade show active" id="post" role="tabpanel" aria-labelledby="post-tab">
-          posts here
-        </div>
-
-        <div class="tab-pane fade" id="media" role="tabpanel" aria-labelledby="media-tab">
-          <p>Media Here</p>
-        </div>
+    <div class="tab-content" id="profileTabContent">
+      <div class="tab-pane fade show active" id="post" role="tabpanel" aria-labelledby="post-tab">
+        posts here
       </div>
+
+      <div class="tab-pane fade" id="media" role="tabpanel" aria-labelledby="media-tab">
+        <p>Media Here</p>
+      </div>
+    </div>
   </div>
 
   <div class="col-lg-4">

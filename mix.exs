@@ -43,8 +43,8 @@ defmodule GamerBlog.MixProject do
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.7.2"},
       {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
-      {:dart_sass, "~> 0.5", runtime: Mix.env() == :dev},
-      {:swoosh, "~> 1.3"},
+      {:dart_sass, "~> 0.6", runtime: Mix.env() == :dev},
+      {:swoosh, "~> 1.10"},
       {:finch, "~> 0.13"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
@@ -53,7 +53,8 @@ defmodule GamerBlog.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:bootstrap_icons, "~> 0.4.0"},
       {:slugify, "~> 1.3"},
-      {:timex, "~> 3.7"}
+      {:timex, "~> 3.7"},
+      {:faker, "~> 0.17"}
     ]
   end
 
@@ -71,7 +72,11 @@ defmodule GamerBlog.MixProject do
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["esbuild.install --if-missing"],
       "assets.build": ["esbuild default"],
-      "assets.deploy": ["esbuild default --minify", "sass default --no-source-map --style=compressed", "phx.digest"]
+      "assets.deploy": [
+        "esbuild default --minify",
+        "sass default --no-source-map --style=compressed",
+        "phx.digest"
+      ]
     ]
   end
 end

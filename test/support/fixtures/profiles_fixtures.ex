@@ -27,4 +27,18 @@ defmodule GamerBlog.ProfilesFixtures do
 
     profile
   end
+
+  @doc """
+  Generate a follow.
+  """
+  def follow_fixture(attrs \\ %{}) do
+    {:ok, follow} =
+      attrs
+      |> Enum.into(%{
+
+      })
+      |> GamerBlog.Profiles.create_follow()
+
+    follow
+  end
 end

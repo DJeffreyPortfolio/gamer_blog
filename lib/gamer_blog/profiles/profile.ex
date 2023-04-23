@@ -9,8 +9,8 @@ defmodule GamerBlog.Profiles.Profile do
     field :avatar, :string, default: "/images/avatar.png"
     field :post_count, :integer, default: 0
     field :username, :string
-    field :who_follow_me_count, :integer, default: 0
-    field :who_i_follow_count, :integer, default: 0
+    field :follower_count, :integer, default: 0
+    field :following_count, :integer, default: 0
     belongs_to :user, User, type: :binary_id
 
     timestamps()
@@ -28,7 +28,9 @@ defmodule GamerBlog.Profiles.Profile do
   defp validate_username(username) do
     username
     |> validate_required([:username])
-    |> validate_format(:username, ~r/^[a-zA-Z0-9_.-]*$/, message: "Please use letters and numbers without space(only characters allowed _ . -)")
+    |> validate_format(:username, ~r/^[a-zA-Z0-9_.-]*$/,
+      message: "Please use letters and numbers without space(only characters allowed _ . -)"
+    )
     |> validate_length(:username, min: 3, max: 160)
     |> unsafe_validate_unique(:username, GamerBlog.Repo)
     |> unique_constraint(:username)

@@ -9,11 +9,10 @@ defmodule GamerBlogWeb.PostLive.Index do
     c_id = params["community_id"] |> String.to_integer()
 
     {:ok,
-      socket
-      |> stream(:posts, CMS.list_posts(c_id))
-      |> assign(:title, assign_title(c_id))
-      |> assign(:c_id, c_id)
-    }
+     socket
+     |> stream(:posts, CMS.list_posts(c_id))
+     |> assign(:title, assign_title(c_id))
+     |> assign(:c_id, c_id)}
   end
 
   @impl true
@@ -21,10 +20,10 @@ defmodule GamerBlogWeb.PostLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
+  defp apply_action(socket, :edit, %{"id" => id, "slug" => slug}) do
     socket
     |> assign(:page_title, "Edit Post")
-    |> assign(:post, CMS.get_post!(id))
+    |> assign(:post, CMS.get_post!(id, slug))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -44,8 +43,8 @@ defmodule GamerBlogWeb.PostLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    post = CMS.get_post!(id)
+  def handle_event("delete", %{"id" => id, "slug" => slug}, socket) do
+    post = CMS.get_post!(id, slug)
     {:ok, _} = CMS.delete_post(post)
 
     {:noreply, stream_delete(socket, :posts, post)}

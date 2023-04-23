@@ -7,7 +7,7 @@ defmodule GamerBlog.Profiles do
   alias GamerBlog.Repo
 
   alias GamerBlog.Accounts.User
-  alias GamerBlog.Profiles.Profile
+  alias GamerBlog.Profiles.{Profile, Follow}
 
   @doc """
   Gets a single profile.
@@ -27,6 +27,7 @@ defmodule GamerBlog.Profiles do
     Profile
     |> Repo.get_by!(user_id: id)
   end
+
   @doc """
   Returns the profile from user.
   """
@@ -108,4 +109,54 @@ defmodule GamerBlog.Profiles do
     Profile.changeset(profile, attrs)
   end
 
+  @doc """
+  Creates a follow to the given following user, and builds
+  user association to be able to preload the user when associations are loaded,
+  gets users to update counts, then performs 3 Repo operations,
+  creates the follow, updates user followings count, and user followers count,
+  we select the user in our updated followers count query, that gets returned
+  """
+  def create_follow(current_user, profile, attrs \\ %{}) do
+    follow_attrs = %Follow{} |> Follow.changeset(attrs)
+
+    follow =
+      follow_attrs
+      |> Ecto.Changeset.put_change(:follower_id, current_user.id)
+      |> Ecto.Changeset.put_change(:following_id, profile.user_id)
+
+    update_following_count = from(p in Profile, where: p.user_id == ^current_user.id)
+    update_follower_count = from(p in Profile, where: p.user_id == ^profile.user_id, select: p)
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.insert(:follow, follow)
+    |> Ecto.Multi.update_all(:update_following, update_following_count, inc: [following_count: 1])
+    |> Ecto.Multi.update_all(:update_followers, update_follower_count, inc: [follower_count: 1])
+    |> Repo.transaction()
+  end
+
+  @doc """
+  Deletes following association with given user,
+  then performs 3 Repo operations, to delete the association,
+  update followings count, update and select followers count,
+  updated followers count gets returned
+  """
+  def unfollow(follower_id, following_id) do
+    follow = following?(follower_id, following_id)
+    update_following_count = from(p in Profile, where: p.user_id == ^following_id)
+    update_follower_count = from(p in Profile, where: p.user_id == ^follower_id, select: p)
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.delete(:follow, follow)
+    |> Ecto.Multi.update_all(:update_following, update_following_count, inc: [following_count: -1])
+    |> Ecto.Multi.update_all(:update_followers, update_follower_count, inc: [follower_count: -1])
+    |> Repo.transaction()
+  end
+
+  @doc """
+  Returns nil if not found
+  """
+  def following?(follower_id, following_id) do
+    Follow
+    |> Repo.get_by(follower_id: follower_id, following_id: following_id)
+  end
 end

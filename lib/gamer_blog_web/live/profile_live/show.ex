@@ -15,4 +15,10 @@ defmodule GamerBlogWeb.ProfileLive.Show do
      |> assign(:profile, Profiles.show_profile!(username))}
   end
 
+  @impl true
+  def handle_info({:update_totals, profile}, socket) do
+    {:noreply,
+     socket
+     |> assign(:profile, Profiles.show_profile!(profile.username))}
+  end
 end

@@ -6,25 +6,38 @@
     <div class="card rounded">
       <div class="card-body">
         <div class="text-center">
-          <p><img src={@post.user.profile.avatar} class="avatar avatar-xxl rounded-circle bg-primary border" /></p>
+          <p>
+            <img
+              src={@post.user.profile.avatar}
+              class="avatar avatar-xxl rounded-circle border border-black"
+            />
+          </p>
           <.link navigate={~p"/user/#{@post.user.profile.username}"}>
             <%= @post.user.profile.username %>
           </.link>
         </div>
-        <hr>
+        <hr />
         <div class="text-center">
           Likes: <%= @post.total_likes %>
-          <%= if @current_user.id != @post.user.id do %>
-            like component
+          <%= if @current_user.id != @post.user_id do %>
+            <.live_component
+              module={GamerBlogWeb.LikeComponent}
+              id={@post.user_id}
+              liked={@post}
+              current_user={@current_user}
+            />
           <% end %>
         </div>
         <%= if @current_user.id == @post.user_id do %>
-        <hr />
-        <div class="text-center">
-          <.link patch={~p"/c/#{@post.community_id}/posts/#{@post.id}/#{@post.slug}/show/edit"} phx-click={JS.push_focus()}>
-            <.button class="btn-secondary">Edit post <%= Bootstrap.Icons.pencil() %></.button>
-          </.link>
-        </div>
+          <hr />
+          <div class="text-center">
+            <.link
+              patch={~p"/c/#{@post.community_id}/posts/#{@post.id}/#{@post.slug}/show/edit"}
+              phx-click={JS.push_focus()}
+            >
+              <.button class="btn-secondary">Edit post <%= Bootstrap.Icons.pencil() %></.button>
+            </.link>
+          </div>
         <% end %>
       </div>
     </div>
@@ -41,7 +54,12 @@
   </div>
 </div>
 
-<.modal :if={@live_action == :edit} id="post-modal" show on_cancel={JS.patch(~p"/c/#{@post.community_id}/posts/#{@post.id}/#{@post.slug}")}>
+<.modal
+  :if={@live_action == :edit}
+  id="post-modal"
+  show
+  on_cancel={JS.patch(~p"/c/#{@post.community_id}/posts/#{@post.id}/#{@post.slug}")}
+>
   <.live_component
     module={GamerBlogWeb.PostLive.FormComponent}
     id={@post.id}

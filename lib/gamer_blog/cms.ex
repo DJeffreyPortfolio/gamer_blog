@@ -9,7 +9,7 @@ defmodule GamerBlog.CMS do
 
   alias GamerBlog.CMS.Post
   alias GamerBlog.Accounts.User
-  alias GamerBlog.Profiles.{Profile, Follows}
+  alias GamerBlog.Profiles.{Profile, Follow}
 
   @doc """
   Returns the list of posts.
@@ -35,6 +35,7 @@ defmodule GamerBlog.CMS do
     |> offset(^((page - 1) * per_page))
     |> order_by(desc: :id)
     |> Repo.all()
+    |> Repo.preload(user: [:profile])
   end
 
   @doc """
@@ -49,7 +50,7 @@ defmodule GamerBlog.CMS do
   def get_post!(id, slug) do
     Post
     |> Repo.get_by!(id: id, slug: slug)
-    |> Repo.preload([user: [:profile]])
+    |> Repo.preload([:likes, user: [:profile]])
   end
 
   @doc """
@@ -63,6 +64,7 @@ defmodule GamerBlog.CMS do
   def create_post(%User{} = user, attrs) do
     update_post_count = from(p in Profile, where: p.user_id == ^user.id)
     post_attrs = %Post{} |> Post.changeset(attrs)
+
     post =
       post_attrs
       |> Ecto.Changeset.put_change(:user_id, user.id)
@@ -107,5 +109,28 @@ defmodule GamerBlog.CMS do
   """
   def change_post(%Post{} = post, attrs \\ %{}) do
     Post.changeset(post, attrs)
+  end
+
+  def dashboard_feed(page: page, per_page: per_page, user_id: user_id) do
+    f_list = following_list(user_id)
+
+    Post
+    |> where([p], p.user_id in ^f_list)
+    |> or_where([p], p.user_id == ^user_id)
+    |> limit(^per_page)
+    |> offset(^((page - 1) * per_page))
+    |> order_by(desc: :id)
+    |> preload(user: [:profile])
+    |> Repo.all()
+  end
+
+  def following_list(user_id) do
+    Follow
+    |> where([f], f.follower_id == ^user_id)
+    |> select([f], f.following_id)
+    |> Repo.all()
+  end
+
+  defp pagination(query, %{page: page, per_page: per_page}) do
   end
 end

@@ -3,14 +3,16 @@ defmodule GamerBlog.CMS.Post do
   import Ecto.Changeset
 
   alias GamerBlog.Accounts.User
+  alias GamerBlog.Likes.Like
 
   schema "posts" do
     field :community_id, :integer
     field :content, :string
     field :slug, :string
     field :title, :string
-    field :total_likes, :integer
+    field :total_likes, :integer, default: 0
     belongs_to :user, User, type: :binary_id
+    has_many :likes, Like, foreign_key: :liked_id
 
     timestamps()
   end

@@ -2,7 +2,10 @@
   <div class="col-lg-3">
     <div class="card bg-white mb-6">
       <div class="card-header text-center">
-        <img src={@profile.avatar} class="avatar-xxl avatar-raised bg-white rounded-circle border border-secondary border-3" />
+        <img
+          src={@profile.avatar}
+          class="avatar-xxl avatar-raised bg-white rounded-circle border border-secondary border-3"
+        />
         <h5 class="font-semibold"><%= @profile.username %></h5>
       </div>
       <div class="card-body">
@@ -13,28 +16,78 @@
           </div>
           <div class="vr"></div>
           <div>
-            <h6 class="mb-0 font-bold"><%= @profile.post_count %></h6>
+            <h6 class="mb-0 font-bold"><%= @profile.follower_count %></h6>
             <small>Followers</small>
           </div>
           <div class="vr"></div>
           <div>
-            <h6 class="mb-0"><%= @profile.post_count %></h6>
+            <h6 class="mb-0"><%= @profile.following_count %></h6>
             <small>Following</small>
           </div>
         </div>
         <hr />
         <div class="text-center">
-        <.link patch={~p"/mydashboard/edit"} phx-click={JS.push_focus()}>
-          <.button class="btn-secondary">Edit profile <%= Bootstrap.Icons.pencil() %></.button>
-        </.link>
+          <.link patch={~p"/mydashboard/edit"} phx-click={JS.push_focus()}>
+            <.button class="btn-secondary">Edit profile <%= Bootstrap.Icons.pencil() %></.button>
+          </.link>
         </div>
       </div>
     </div>
   </div>
   <div class="col-md-8 col-lg-6 vstack gap-4">
-    <p>following posts here</p>
+    <div id="follow_posts" phx-update="stream">
+      <div :for={{post_id, post} <- @streams.posts} id={post_id}>
+        <div class="card bg-white rounded-3 mb-4">
+          <div class="card-header border-0 pb-0">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                <img src={post.user.profile.avatar} , class="avatar avatar-raised me-2" />
+                <div>
+                  <div class="nav nav-divider">
+                    <h6 class="nav-item small text-muted card-title mb-0">
+                      <.link navigate={~p"/user/#{post.user.profile.username}"}>
+                        <%= post.user.profile.username %>
+                      </.link>
+                    </h6>
+                    <span class="nav-item small text-muted ms-2">
+                      <%= Timex.from_now(post.updated_at) %>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <.link navigate={~p"/c/#{post.community_id}/posts/#{post.id}/#{post.slug}"}>
+              <h4 class="font-bold"><%= post.title %></h4>
+            </.link>
+            <p><%= String.slice(post.content, 0, 100) %>...</p>
+            <img class="card-img" />
+            <ul class="nav nav-stack py-3 small">
+              <li class="nav-item">
+                <span class="nav-link justify-space-between">
+                  <%= Bootstrap.Icons.heart(class: "text-danger") %>
+                  <%= post.total_likes %> Likes
+                  <%= if @current_user.id == post.user_id do %>
+                    <.link
+                      phx-click={JS.push("delete", value: %{id: post_id}) |> hide("##{post_id}")}
+                      data-confirm="Are you sure?"
+                    >
+                      Delete
+                    </.link>
+                  <% end %>
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <nav class="blog-pagination justify-content-center" aria-label="Pagination">
+      <button class="btn btn-primary" phx-click="pagination_less">Previous</button>
+      <button class="btn btn-secondary" phx-click="pagination_more">Next</button>
+    </nav>
   </div>
-
 
   <div class="col-lg-3">
     <div class="card bg-white mb-4 pb-4">
@@ -48,7 +101,12 @@
   </div>
 </div>
 
-<.modal :if={@live_action in [:edit]} id="profile-modal" show on_cancel={JS.patch(~p"/mydashboard")}>
+<.modal
+  :if={@live_action in [:edit]}
+  id="profile-modal"
+  show
+  on_cancel={JS.patch(~p"/mydashboard")}
+>
   <.live_component
     module={GamerBlogWeb.ProfileLive.FormComponent}
     id={@profile.id}

@@ -41,7 +41,7 @@ config :esbuild,
 
 # Configure Dart sass for Bootstrap 5
 config :dart_sass,
-  version: "1.54.5",
+  version: "1.61.0",
   default: [
     args: ~w(css/app.scss ../priv/static/assets/app.css),
     cd: Path.expand("../assets", __DIR__)
