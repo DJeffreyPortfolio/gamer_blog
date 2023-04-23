@@ -132,5 +132,12 @@ defmodule GamerBlog.CMS do
   end
 
   defp pagination(query, %{page: page, per_page: per_page}) do
+    offset = max((page - 1) * per_page, 0)
+
+    query
+    |> limit(^per_page)
+    |> offset(^offset)
   end
+
+  defp pagination(query, _options), do: query
 end
