@@ -70,7 +70,10 @@
                   <%= post.total_likes %> Likes
                   <%= if @current_user.id == post.user_id do %>
                     <.link
-                      phx-click={JS.push("delete", value: %{id: post_id}) |> hide("##{post_id}")}
+                      phx-click={
+                        JS.push("delete", value: %{id: post.id, slug: post.slug})
+                        |> hide("##{post_id}")
+                      }
                       data-confirm="Are you sure?"
                     >
                       Delete
@@ -84,8 +87,19 @@
       </div>
     </div>
     <nav class="blog-pagination justify-content-center" aria-label="Pagination">
-      <button class="btn btn-primary" phx-click="pagination_less">Previous</button>
-      <button class="btn btn-secondary" phx-click="pagination_more">Next</button>
+      <.link
+        :if={@options.page > 1}
+        patch={~p"/mydashboard?#{%{@options | page: @options.page - 1}}"}
+        class="btn btn-primary"
+      >
+        Previous
+      </.link>
+      <.link
+        patch={~p"/mydashboard?#{%{@options | page: @options.page + 1}}"}
+        class="btn btn-outline-secondary"
+      >
+        Next
+      </.link>
     </nav>
   </div>
 

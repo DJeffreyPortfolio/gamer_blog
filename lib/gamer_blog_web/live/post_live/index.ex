@@ -6,18 +6,36 @@ defmodule GamerBlogWeb.PostLive.Index do
 
   @impl true
   def mount(params, _session, socket) do
-    c_id = params["community_id"] |> String.to_integer()
+    c_id = param_to_integer(params["community_id"], 1)
 
     {:ok,
      socket
-     |> stream(:posts, CMS.list_posts(c_id))
      |> assign(:title, assign_title(c_id))
-     |> assign(:c_id, c_id)}
+     |> assign(:c_id, c_id)
+     |> stream(:posts, [])}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+    page = param_to_integer(params["page"], 1)
+    per_page = param_to_integer(params["per_page"], 5)
+
+    options = %{
+      page: page,
+      per_page: per_page
+    }
+
+    posts = CMS.list_posts(options, socket.assigns.c_id)
+
+    socket =
+      Enum.reduce(posts, socket, fn post, socket ->
+        stream_insert(socket, :posts, post)
+      end)
+
+    {:noreply,
+     socket
+     |> assign(:options, options)
+     |> apply_action(socket.assigns.live_action, params)}
   end
 
   defp apply_action(socket, :edit, %{"id" => id, "slug" => slug}) do
@@ -50,13 +68,25 @@ defmodule GamerBlogWeb.PostLive.Index do
     {:noreply, stream_delete(socket, :posts, post)}
   end
 
+  defp param_to_integer(nil, default), do: default
+
+  defp param_to_integer(param, default) do
+    case Integer.parse(param) do
+      {number, _} ->
+        number
+
+      :error ->
+        default
+    end
+  end
+
   defp assign_title(c_id) do
     case c_id do
-      1 -> title = "Apex Legends"
-      2 -> title = "Civilization 6"
-      3 -> title = "Destiny 2"
-      4 -> title = "Fortnite"
-      5 -> title = "Warhammer 40k"
+      1 -> _title = "Apex Legends"
+      2 -> _title = "Civilization 6"
+      3 -> _title = "Destiny 2"
+      4 -> _title = "Fortnite"
+      5 -> _title = "Pokemon Blue"
     end
   end
 end

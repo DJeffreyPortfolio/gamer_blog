@@ -75,7 +75,56 @@
 
     <div class="tab-content" id="profileTabContent">
       <div class="tab-pane fade show active" id="post" role="tabpanel" aria-labelledby="post-tab">
-        posts here
+        <div id="profile_posts" phx-update="stream">
+          <div :for={{post_id, post} <- @streams.profile_posts} id={post_id}>
+            <div class="card bg-white rounded-3 mb-4">
+              <div class="card-header border-0 pb-0">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div class="d-flex align-items-center">
+                    <img src={post.user.profile.avatar} , class="avatar avatar-raised me-2" />
+                    <div>
+                      <div class="nav nav-divider">
+                        <h6 class="nav-item small text-muted card-title mb-0">
+                          <.link navigate={~p"/user/#{post.user.profile.username}"}>
+                            <%= post.user.profile.username %>
+                          </.link>
+                        </h6>
+                        <span class="nav-item small text-muted ms-2">
+                          <%= Timex.from_now(post.updated_at) %>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <.link navigate={~p"/c/#{post.community_id}/posts/#{post.id}/#{post.slug}"}>
+                  <h4 class="font-bold"><%= post.title %></h4>
+                </.link>
+                <p><%= String.slice(post.content, 0, 100) %>...</p>
+                <img class="card-img" />
+                <ul class="nav nav-stack py-3 small">
+                  <li class="nav-item">
+                    <span class="nav-link justify-space-between">
+                      <%= Bootstrap.Icons.heart(class: "text-danger") %>
+                      <%= post.total_likes %> Likes
+                      <%= if @current_user.id == post.user_id do %>
+                        <.link
+                          phx-click={
+                            JS.push("delete", value: %{id: post_id}) |> hide("##{post_id}")
+                          }
+                          data-confirm="Are you sure?"
+                        >
+                          Delete
+                        </.link>
+                      <% end %>
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="tab-pane fade" id="media" role="tabpanel" aria-labelledby="media-tab">

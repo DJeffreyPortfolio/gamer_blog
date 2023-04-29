@@ -6,14 +6,23 @@ defmodule GamerBlogWeb.ProfileLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok,
-     socket
-     |> assign(page: 1, per_page: 5)}
+    {:ok, socket}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+    page = (params["page"] || "1") |> String.to_integer()
+    per_page = (params["per_page"] || "5") |> String.to_integer()
+
+    options = %{
+      page: page,
+      per_page: per_page
+    }
+
+    {:noreply,
+     socket
+     |> assign(options: options)
+     |> apply_action(socket.assigns.live_action, params)}
   end
 
   defp apply_action(socket, :edit, _params) do
@@ -27,11 +36,7 @@ defmodule GamerBlogWeb.ProfileLive.Index do
     |> assign(:profile, Profiles.get_profile!(socket.assigns.current_user.id))
     |> stream(
       :posts,
-      CMS.dashboard_feed(
-        page: socket.assigns.page,
-        per_page: socket.assigns.per_page,
-        user_id: socket.assigns.current_user.id
-      )
+      CMS.dashboard_feed(socket.assigns.options, user_id: socket.assigns.current_user.id)
     )
   end
 
@@ -40,16 +45,11 @@ defmodule GamerBlogWeb.ProfileLive.Index do
     {:noreply, assign(socket, :profiles, profile)}
   end
 
-  def handle_event("pagination_less", _, socket) do
-    socket = update(socket, :page, &max(&1 - 1, 0))
-    socket = update(socket, :per_page, &max(&1 - 5, 5))
-    {:noreply, socket}
-  end
+  @impl true
+  def handle_event("delete", %{"id" => id, "slug" => slug}, socket) do
+    post = CMS.get_post!(id, slug)
+    {:ok, _} = CMS.delete_post(post)
 
-  def handle_event("pagination_more", _, socket) do
-    socket = update(socket, :page, &(&1 + 1))
-    socket = update(socket, :per_page, &(&1 + 5))
-    IO.inspect(socket)
-    {:noreply, socket}
+    {:noreply, stream_delete(socket, :posts, post)}
   end
 end

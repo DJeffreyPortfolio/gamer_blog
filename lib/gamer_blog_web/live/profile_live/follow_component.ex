@@ -48,7 +48,7 @@ defmodule GamerBlogWeb.ProfileLive.FollowComponent do
   defp follow(socket, current_user, profile_user) do
     updated_user = Profiles.create_follow(current_user, profile_user)
     # Message sent to the parent liveview to update totals
-    send(self(), {__MODULE__, :update_totals, profile_user})
+    send(self(), {__MODULE__, :update_totals, updated_user})
 
     {:noreply,
      socket
@@ -59,7 +59,7 @@ defmodule GamerBlogWeb.ProfileLive.FollowComponent do
   defp unfollow(socket, current_user, profile_user) do
     updated_profile = Profiles.unfollow(current_user.id, profile_user.user_id)
     # Message sent to the parent liveview to update totals
-    send(self(), {__MODULE__, :update_totals, profile_user})
+    send(self(), {__MODULE__, :update_totals, updated_profile})
 
     {:noreply,
      socket
