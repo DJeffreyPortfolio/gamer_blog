@@ -6,22 +6,14 @@ defmodule GamerBlogWeb.ProfileLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    {:ok, stream(socket, :posts, [])}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
-    page = (params["page"] || "1") |> String.to_integer()
-    per_page = (params["per_page"] || "5") |> String.to_integer()
-
-    options = %{
-      page: page,
-      per_page: per_page
-    }
 
     {:noreply,
      socket
-     |> assign(options: options)
      |> apply_action(socket.assigns.live_action, params)}
   end
 
@@ -32,12 +24,15 @@ defmodule GamerBlogWeb.ProfileLive.Index do
   end
 
   defp apply_action(socket, :index, _params) do
+    posts = CMS.dashboard_feed(user_id: socket.assigns.current_user.id)
+
+    socket =
+      Enum.reduce(posts, socket, fn post, socket ->
+        stream_insert(socket, :posts, post)
+      end)
+
     socket
     |> assign(:profile, Profiles.get_profile!(socket.assigns.current_user.id))
-    |> stream(
-      :posts,
-      CMS.dashboard_feed(socket.assigns.options, user_id: socket.assigns.current_user.id)
-    )
   end
 
   @impl true

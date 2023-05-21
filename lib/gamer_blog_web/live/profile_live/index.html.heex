@@ -86,21 +86,6 @@
         </div>
       </div>
     </div>
-    <nav class="blog-pagination justify-content-center" aria-label="Pagination">
-      <.link
-        :if={@options.page > 1}
-        patch={~p"/mydashboard?#{%{@options | page: @options.page - 1}}"}
-        class="btn btn-primary"
-      >
-        Previous
-      </.link>
-      <.link
-        patch={~p"/mydashboard?#{%{@options | page: @options.page + 1}}"}
-        class="btn btn-outline-secondary"
-      >
-        Next
-      </.link>
-    </nav>
   </div>
 
   <div class="col-lg-3">

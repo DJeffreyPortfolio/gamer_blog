@@ -17,15 +17,7 @@ defmodule GamerBlogWeb.PostLive.Index do
 
   @impl true
   def handle_params(params, _url, socket) do
-    page = param_to_integer(params["page"], 1)
-    per_page = param_to_integer(params["per_page"], 5)
-
-    options = %{
-      page: page,
-      per_page: per_page
-    }
-
-    posts = CMS.list_posts(options, socket.assigns.c_id)
+    posts = CMS.list_posts(socket.assigns.c_id)
 
     socket =
       Enum.reduce(posts, socket, fn post, socket ->
@@ -34,7 +26,6 @@ defmodule GamerBlogWeb.PostLive.Index do
 
     {:noreply,
      socket
-     |> assign(:options, options)
      |> apply_action(socket.assigns.live_action, params)}
   end
 

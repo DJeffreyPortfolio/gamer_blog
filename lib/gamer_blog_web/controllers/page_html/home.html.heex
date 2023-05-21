@@ -3,8 +3,71 @@
   <div class="col-lg-6 mx-auto">
     <p class="lead mb-4">
       This is a portfolio piece created by David Jeffrey using Phoenix Elixir, Bootstrap 5, and Postgresql.
-      This site is a basic smaller social media site where people can create a profile, post blogs about games in their respective communities,
+      This site is a basic smaller social media site where people can create a profile, post blogs about games in the respective communities,
       like posts, and follow other users.
     </p>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#infoModal">
+      Please Read First
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="infoModalLabel">Log in info</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>For brevity's sake, I have created some users for preview purposes. If you would like to still
+            register and create a new profile, that is fine. If not; here are some emails and passwords.</p>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Email</th>
+                  <th scope="col">Password</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>test1@test.com</td>
+                  <td>Password1234</td>
+                </tr>
+                <tr>
+                  <td>test2@test.com</td>
+                  <td>Password1234</td>
+                </tr>
+                <tr>
+                  <td>test3@test.com</td>
+                  <td>Password1234</td>
+                </tr>
+                <tr>
+                  <td>test4@test.com</td>
+                  <td>Password1234</td>
+                </tr>
+                <tr>
+                  <td>test5@test.com</td>
+                  <td>Password1234</td>
+                </tr>
+                <tr>
+                  <td>test6@test.com</td>
+                  <td>Password1234</td>
+                </tr>
+                <tr>
+                  <td>test7@test.com</td>
+                  <td>Password1234</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
   </div>
 </div>

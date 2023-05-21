@@ -66,21 +66,6 @@
           <.button class="btn-primary">New Post</.button>
         </.link>
       </div>
-      <nav class="blog-pagination justify-content-center" aria-label="Pagination">
-        <.link
-          :if={@options.page > 1}
-          patch={~p"/c/#{@c_id}/posts?#{%{@options | page: @options.page - 1}}"}
-          class="btn btn-primary"
-        >
-          Previous
-        </.link>
-        <.link
-          patch={~p"/c/#{@c_id}/posts?#{%{@options | page: @options.page + 1}}"}
-          class="btn btn-outline-secondary"
-        >
-          Next
-        </.link>
-      </nav>
     </div>
   </div>
 </div>

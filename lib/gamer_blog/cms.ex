@@ -17,10 +17,9 @@ defmodule GamerBlog.CMS do
       iex> list_posts()
       [%Post{}, ...]
   """
-  def list_posts(options, c_id) do
+  def list_posts(c_id) do
     Post
     |> where([p], p.community_id == ^c_id)
-    |> paginate(options)
     |> order_by([p], desc: p.updated_at)
     |> Repo.all()
     |> Repo.preload(user: [:profile])
@@ -110,13 +109,12 @@ defmodule GamerBlog.CMS do
     Post.changeset(post, attrs)
   end
 
-  def dashboard_feed(options, user_id: user_id) when is_map(options) do
+  def dashboard_feed(user_id: user_id) do
     f_list = following_list(user_id)
 
     Post
     |> where([p], p.user_id in ^f_list)
     |> or_where([p], p.user_id == ^user_id)
-    |> paginate(options)
     |> order_by(desc: :id)
     |> preload(user: [:profile])
     |> Repo.all()
@@ -128,14 +126,4 @@ defmodule GamerBlog.CMS do
     |> select([f], f.following_id)
     |> Repo.all()
   end
-
-  defp paginate(query, %{page: page, per_page: per_page}) do
-    offset = max((page - 1) * per_page, 0)
-
-    query
-    |> limit(^per_page)
-    |> offset(^offset)
-  end
-
-  defp paginate(query, _options), do: query
 end
