@@ -29,7 +29,7 @@ defmodule GamerBlogWeb.UserSettingsLive do
             required
           />
           <:actions>
-            <.button phx-disable-with="Changing...">Change Email</.button>
+            <.button phx-disable-with="Changing..." class="btn-primary">Change Email</.button>
           </:actions>
         </.simple_form>
       </div>
@@ -65,7 +65,7 @@ defmodule GamerBlogWeb.UserSettingsLive do
             required
           />
           <:actions>
-            <.button phx-disable-with="Changing...">Change Password</.button>
+            <.button phx-disable-with="Changing..." class="btn-primary">Change Password</.button>
           </:actions>
         </.simple_form>
       </div>
