@@ -2,5 +2,8 @@
   "devDependencies": {
     "@popperjs/core": "^2.11.7",
     "bootstrap": "^5.2.3"
+  },
+  "scripts": {
+    "deploy": "cd .. && mix assets.deploy && rm -f _build/esbuild*"
   }
 }
